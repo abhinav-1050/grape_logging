@@ -2,11 +2,15 @@ module GrapeLogging
   module Formatters
     class Json
       def call(severity, datetime, _, data)
-        {
+        payload = {
           date: datetime,
           severity: severity,
           data: format(data)
-        }.to_json + "\n"
+        }
+
+        payload.to_json + "\n"
+      rescue JSON::GeneratorError, Encoding::UndefinedConversionError => e
+        payload.to_s + "\n"
       end
 
       private
